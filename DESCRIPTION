@@ -1,0 +1,19 @@
+Package: KOIOS
+Type: Package
+Title: VCF Conversion handling for OMOP Genomic Data
+Version: 0.1.0
+Author: Laurence Lawrence-Archer
+Maintainer: This package is maintained by Laurence Lawrence-Archer <ldyer2006@gmail.com>
+Description: KOIOS handles conversions between raw .vcf or .vcf.gz files, via hgvsg 
+notation and ClinGen, into output data that contains OMOP Genomic IDs for clinically 
+relevant variants.
+Imports:
+  vcfR,
+  jsonlite,
+  httr,
+  stringr,
+  dplyr,
+  tidyr
+License: Apache License (>= 2)
+Encoding: UTF-8
+LazyData: true
