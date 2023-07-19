@@ -1,4 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-Test VCF/
+^data$
+^Test VCF$
 koios_Test.R
