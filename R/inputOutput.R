@@ -2,7 +2,7 @@
 #' @return A set of concept synonyms for the OMOP Genomic dataset, derived from ATHENA
 #' @export
 loadConcepts <- function(){
-  concepts <- read.csv(here::here("data/OMOP_GENOMIC/CONCEPT_SYNONYM.csv"), sep = "\t")
+  concepts <- utils::read.csv(here::here("data/OMOP_GENOMIC/CONCEPT_SYNONYM.csv"), sep = "\t")
   concepts <- concepts[!is.na(concepts$concept_synonym_name),]
   return(concepts)
 }

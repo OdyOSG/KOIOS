@@ -9,28 +9,34 @@
 #' @export
 processVCF <- function(vcfR, ref){
 
-  ref.df <- read.csv(paste(here::here("data/reference/"),"/",ref,".csv",sep=""))[,-1]
+  ref.df <- utils::read.csv(paste(here::here("data/reference/"),"/",ref,".csv",sep=""))[,-1]
 
-  vcf.df <- as.data.frame(vcfR::getFIX(vcf))
+  vcf.df <- as.data.frame(vcfR::getFIX(.data$vcf))
+
+  colnames(vcf.df) <- c("CHROM","POS","ID","REF","ALT","QUAL","FILTER")
+
+  return(vcf.df)
 
 }
 
 #' Process a single vcfR object to return a dataframe containing hgvsg notation
-#' @param vcf Input vcf.df object
+#' @param vcf.df Input vcf.df object
 #' @param ref A ref.df object containing chrom specifications
 #' @return A dataframe containing hgvsg notation for all variants
 #' @export
-generateHGVSG <- function(vcf, ref){
+generateHGVSG <- function(vcf.df, ref){
 
-  vcf.df <- vcf %>%
-    dplyr::mutate(REF_L = stringr::str_length(REF), ALT_L = stringr::str_length(ALT)) %>%
-    dplyr::mutate(TYPE = ifelse(REF_L == 1 & ALT_L == 1, "SNP",
-                                ifelse(REF_L > ALT_L & ALT_L == 1, "DEL",
-                                       ifelse(ALT_L > REF_L & REF_L == 1, "INS", "DELINS")))) %>%
-    dplyr::select(CHROM,POS,REF,REF_L,ALT,ALT_L,TYPE)
+  vcf.df <- vcf.df %>%
+    dplyr::mutate(REF_L = stringr::str_length(.data$REF), ALT_L = stringr::str_length(.data$ALT)) %>%
+    dplyr::mutate(TYPE = ifelse(.data$REF_L == 1 & .data$ALT_L == 1, "SNP",
+                                ifelse(.data$REF_L > .data$ALT_L & .data$ALT_L == 1, "DEL",
+                                       ifelse(.data$ALT_L > .data$REF_L & .data$REF_L == 1, "INS", "DELINS")))) %>%
+    dplyr::select(.data$CHROM,.data$POS,.data$REF,
+                  .data$REF_L,.data$ALT,.data$ALT_L,
+                  .data$TYPE)
 
   vcf.df$hgvsg <- apply(vcf.df, 1, FUN = function(x)
-    hgvsgConvert(row = x, ref = ref.df))
+    hgvsgConvert(row = x, ref = .data$ref.df))
 
   return(vcf.df)
 
@@ -43,11 +49,7 @@ generateHGVSG <- function(vcf, ref){
 #' @export
 hgvsgConvert <- function(row,ref){
 
-  CHROM = row[1]
-  POS = row[2]
-
-
-  if("chr" %in% CHROM){
+  if("chr" %in% row[1]){
     row[1] <- gsub("chr|chr ","",row[1])
   }
 
@@ -63,7 +65,7 @@ hgvsgConvert <- function(row,ref){
     hgvsg <- paste(Chr,":g.",row[2],"_",modPOS,"ins",sep="")
   } else if(row[7] == "DELINS"){
     modPOS <- as.numeric(row[2])+1
-    hgvsg <- paste(Chr,":g.",row[2],"_",modPOS,"delins",ALT,sep="")
+    hgvsg <- paste(Chr,":g.",row[2],"_",modPOS,"delins",row[5],sep="")
   }
 
   return(hgvsg)
