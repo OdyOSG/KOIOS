@@ -9,6 +9,9 @@
 #' @export
 processClinGen <- function(vcf.df, ref){
 
+  #Create a handle
+  thisHandle <- httr::handle("http://reg.test.genome.network/")
+
   vcf.df$URL <- paste("http://reg.test.genome.network/allele?hgvs=",vcf.df$hgvsg,sep="")
 
   returnDat <- as.data.frame(matrix(ncol = 7))
@@ -21,7 +24,9 @@ processClinGen <- function(vcf.df, ref){
 
     tempVCF <- vcf.df[i,]
 
-    urlTest <- httr::GET(url = tempVCF$URL, encoding = "UTF-8", as = "text")
+    urlTest <- httr::GET(handle = thisHandle,
+                         path = gsub(thisHandle$url,"",tempVCF$URL),
+                         encoding = "UTF-8", as = "text")
 
     suppressMessages(
       variant <- jsonlite::parse_json(urlTest)

@@ -11,7 +11,7 @@ processVCF <- function(vcfR, ref){
 
   ref.df <- utils::read.csv(paste(here::here("data/reference/"),"/",ref,".csv",sep=""))[,-1]
 
-  vcf.df <- as.data.frame(vcfR::getFIX(.data$vcf))
+  vcf.df <- as.data.frame(vcfR::getFIX(vcfR))
 
   colnames(vcf.df) <- c("CHROM","POS","ID","REF","ALT","QUAL","FILTER")
 
