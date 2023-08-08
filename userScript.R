@@ -12,7 +12,7 @@ vcf <- loadVCF(userVCF = "Test VCF/GSE142442_RAW/GSE142442_12_AST.vcf")
 ref <- "auto"
 
 #Please indicate whether or not you would like to return all transcript alleles
-generateTranscripts <- "FALSE"
+generateTranscripts <- "TRUE"
 
 ##### MAIN #####
 
