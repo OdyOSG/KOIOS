@@ -2,6 +2,7 @@
 
 export("%>%")
 export(addConcepts)
+export(findReference)
 export(generateHGVSG)
 export(hgvsgConvert)
 export(loadConcepts)
