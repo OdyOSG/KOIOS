@@ -4,12 +4,12 @@
 \alias{hgvsgConvert}
 \title{Generate a hgvsg string}
 \usage{
-hgvsgConvert(row, ref)
+hgvsgConvert(row, ref.df)
 }
 \arguments{
 \item{row}{A vcf.df row}
 
-\item{ref}{A ref.df object containing chrom specifications}
+\item{ref.df}{A ref.df object containing chrom specifications}
 }
 \value{
 A single hgvsg string

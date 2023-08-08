@@ -4,10 +4,12 @@
 #'                Must be one of: hg18
 #'                                hg19
 #'                                hg38
+#' @param generateAll A toggle indicating whether all transcript alleles, as well as
+#' all genomic alleles, should be returned
 #' @return A dataframe containing data derived from the relevant ClinGen URL
 #' for each allele found corresponding to a vcf row
 #' @export
-processClinGen <- function(vcf.df, ref){
+processClinGen <- function(vcf.df, ref, generateAll = FALSE){
 
   #Create a handle
   thisHandle <- httr::handle("http://reg.test.genome.network/")
@@ -44,6 +46,34 @@ processClinGen <- function(vcf.df, ref){
 
     genes <- paste(unique(genes),collapse = ", ")
 
+    for(l in c(1:length(variant$transcriptAlleles))){
+
+      if(generateAll == TRUE){
+
+        returnDat[k,]$`Allele#` <- k
+        returnDat[k,]$variantClinGenURL <- tempVCF$URL
+        returnDat[k,]$hgvsg <- variant$transcriptAlleles[[l]]$MANE$nucleotide$RefSeq$hgvs
+        returnDat[k,]$geneSymbol <- paste(unique(genes),collapse=", ")
+        returnDat[k,]$varType <- tempVCF$TYPE
+        returnDat[k,]$chr <- tempVCF$CHROM
+        returnDat[k,]$ref <- ref
+
+        k <- k + 1
+
+        returnDat[k,]$`Allele#` <- k
+        returnDat[k,]$variantClinGenURL <- tempVCF$URL
+        returnDat[k,]$hgvsg <- variant$transcriptAlleles[[l]]$MANE$protein$RefSeq$hgvs
+        returnDat[k,]$geneSymbol <- paste(unique(genes),collapse=", ")
+        returnDat[k,]$varType <- tempVCF$TYPE
+        returnDat[k,]$chr <- tempVCF$CHROM
+        returnDat[k,]$ref <- ref
+
+        k <- k + 1
+
+      }
+
+    }
+
     for(j in c(1:length(variant$genomicAlleles))){
 
       returnDat[k,]$`Allele#` <- k
@@ -58,6 +88,10 @@ processClinGen <- function(vcf.df, ref){
 
     }
 
+  }
+
+  if(generateAll == TRUE){
+    returnDat <- returnDat[!is.na(returnDat$hgvsg),]
   }
 
   return(returnDat)

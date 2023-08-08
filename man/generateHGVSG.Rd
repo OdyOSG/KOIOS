@@ -4,12 +4,12 @@
 \alias{generateHGVSG}
 \title{Process a single vcfR object to return a dataframe containing hgvsg notation}
 \usage{
-generateHGVSG(vcf.df, ref)
+generateHGVSG(vcf.df, ref.df)
 }
 \arguments{
 \item{vcf.df}{Input vcf.df object}
 
-\item{ref}{A ref.df object containing chrom specifications}
+\item{ref.df}{A ref.df object containing chrom specifications}
 }
 \value{
 A dataframe containing hgvsg notation for all variants

@@ -5,15 +5,10 @@
 \title{Process a vcfR object, or list of vcfR objects, to return a dataframe
 containing hgvsg notation for all variants, as well as all clingen urls}
 \usage{
-processVCF(vcfR, ref)
+processVCF(vcfR)
 }
 \arguments{
 \item{vcfR}{Input vcfR object}
-
-\item{ref}{A string indicating the reference genome used
-Must be one of: hg18
-                hg19
-                hg38}
 }
 \value{
 A dataframe containing hgvsg notation and clingen urls for all variants

@@ -7,6 +7,15 @@ loadConcepts <- function(){
   return(concepts)
 }
 
+#' Generate a set of reference maps between chromosome IDs
+#' @param ref The chosen reference genome, hg18/hg19/hg38
+#' @return A map of synonyms between chromosome IDs for a given reference genome
+#' @export
+loadReference <- function(ref=ref){
+  ref.df <- read.csv(paste(here::here("data/reference/"),"/",ref,".csv",sep=""))[,-1]
+  return(ref.df)
+}
+
 #' Load a single .vcf file or a set of .vcf's located in a single directory
 #' @param userVCF A user-defined .vcf file or a directory containing several .vcf objects
 #' @return Either a single vcfR object or a list of vcfR objects

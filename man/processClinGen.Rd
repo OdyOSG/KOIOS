@@ -4,7 +4,7 @@
 \alias{processClinGen}
 \title{Process a vcf.df dataframe to return clingen data for all variants}
 \usage{
-processClinGen(vcf.df, ref)
+processClinGen(vcf.df, ref, generateAll = FALSE)
 }
 \arguments{
 \item{vcf.df}{Input vcf.df object}
@@ -13,6 +13,9 @@ processClinGen(vcf.df, ref)
 Must be one of: hg18
                 hg19
                 hg38}
+
+\item{generateAll}{A toggle indicating whether all transcript alleles, as well as
+all genomic alleles, should be returned}
 }
 \value{
 A dataframe containing data derived from the relevant ClinGen URL
