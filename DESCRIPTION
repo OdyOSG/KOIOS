@@ -9,6 +9,7 @@ Description: KOIOS handles conversions between raw .vcf or .vcf.gz files, via hg
   relevant variants.
 Imports:
   vcfR,
+  BSgenome,
   jsonlite,
   httr,
   stringr,
