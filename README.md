@@ -15,8 +15,8 @@ KOIOS can presently be installed directly from GitHub:
 
 ## Usage
 
-Users may simply replace the relevant information in the userScript.R
-file, or may utilize the package according to the following workflow:
+Users may simply run KOIOS according to the following commands,
+replacing the relevant information:
 
 
     library(KOIOS)

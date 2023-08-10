@@ -21,7 +21,7 @@ devtools::install_github("odyOSG/KOIOS")
 
 ## Usage
 
-Users may simply replace the relevant information in the userScript.R file, or may utilize the package according to the following workflow:
+Users may simply run KOIOS according to the following commands, replacing the relevant information:
 
 ```r
 
