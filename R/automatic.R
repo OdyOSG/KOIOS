@@ -27,16 +27,26 @@ findReference <- function(vcf){
   vcf.hg19 <- generateHGVSG(vcf.df = vcf.snv, ref.df = ref.hg19)
   vcf.hg38 <- generateHGVSG(vcf.df = vcf.snv, ref.df = ref.hg38)
 
-  alleles.hg18 <- processClinGen(vcf.df = vcf.hg18, ref = "hg18", generateAll = F)
-  alleles.hg19 <- processClinGen(vcf.df = vcf.hg19, ref = "hg19", generateAll = F)
-  alleles.hg38 <- processClinGen(vcf.df = vcf.hg38, ref = "hg38", generateAll = F)
+  alleles.hg18 <- processClinGen(vcf.df = vcf.hg18, ref = "hg18", generateAll = F, progressBar = F)
+  alleles.hg19 <- processClinGen(vcf.df = vcf.hg19, ref = "hg19", generateAll = F, progressBar = F)
+  alleles.hg38 <- processClinGen(vcf.df = vcf.hg38, ref = "hg38", generateAll = F, progressBar = F)
 
   alleles.hg18 <- alleles.hg18[!is.na(alleles.hg18$hgvsg),]
   alleles.hg19 <- alleles.hg19[!is.na(alleles.hg19$hgvsg),]
   alleles.hg38 <- alleles.hg38[!is.na(alleles.hg38$hgvsg),]
 
+  alleles.hg18 <- alleles.hg18[!duplicated(alleles.hg18$variantClinGenURL),]
+  alleles.hg19 <- alleles.hg19[!duplicated(alleles.hg19$variantClinGenURL),]
+  alleles.hg38 <- alleles.hg38[!duplicated(alleles.hg38$variantClinGenURL),]
+
   #Find reference genome
   resultLength <- c(dim(alleles.hg18)[1],dim(alleles.hg19)[1],dim(alleles.hg38)[1])
+
+  if(resultLength[which.max(resultLength)] < dim(vcf.snv)[1]){
+    message(paste("Only ", resultLength[which.max(resultLength)],
+                  " results returned from ",dim(vcf.snv)[1],
+                  " tested records. We reccomend checking your VCF data."))
+  }
 
   #Set reference genome
   ref <- c("hg18","hg19","hg38")[which.max(resultLength)]

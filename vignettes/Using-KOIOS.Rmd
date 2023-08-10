@@ -1,0 +1,83 @@
+---
+title: "Using KOIOS"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using KOIOS}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+library(KOIOS)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+KOIOS provides users with a lightweight and easy tool that can generate a set of OMOP Concept IDs, and related information, from a user input VCF file, utilizing the ClinGen Allele Registry test network. This tool is intended to be used by users with no experience of VCF parsing, though some previous experience may help.
+
+## The VCF
+
+VCF files may contain a lot of varied information from different sources, but a [valid VCF](https://www.internationalgenome.org/wiki/Analysis/Variant%20Call%20Format/vcf-variant-call-format-version-40/) file must always contain 8 fixed fields per record. KOIOS relies on the following fixed fields to generate variant and allele data from an input VCF: Chromsome, Position, Reference Allele and Alternate Allele.
+
+VCF data is also highly dependent on the reference genome from which it was generated. Currently KOIOS supports the following reference genomes: Hg18, Hg19 and Hg38. An automatic mode for detecting the reference used to generate a file is also available.
+
+## Running KOIOS
+
+KOIOS relies on an active internet conncetion and on the user having a VCF file that can be loaded in by the VCFr:: package.
+
+We will run this vignette using data downloaded from the [GEO](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE142442).
+
+KOIOS utilizes the OMOP Genomic Vocabulary, derived from [ATHENA](https://athena.ohdsi.org/vocabulary/list).
+
+```{r}
+
+#Load concept library, derived from ATHENA
+concepts <- loadConcepts()
+
+#Load input VCF
+vcf <- loadVCF(here::here("inst/extdata/example/GSE142442_27_AST.vcf"))
+
+#Set the correct reference genome - hg18, hg19, hg38
+ref <- "hg19"
+
+#Indicate whether we would like to generate information on all transcript alleles associated with a given variant.
+generateTranscripts <- "TRUE"
+
+```
+
+If a user is unaware of the reference genome that was used to generate a given file, they may use the findReference() function:
+
+```{r}
+
+ref <- findReference(vcf = vcf)
+print(ref)
+
+```
+
+Once the input and settings are established, KOIOS is run as follows:
+
+```{r, fig.align='center', }
+
+#Load reference
+ref.df <- loadReference(ref)
+
+#Process VCF file
+vcf.df <- processVCF(vcf)
+
+#Generate HGVSG formatted data for submission to ClinGen
+vcf.df <- generateHGVSG(vcf = vcf.df, ref = ref.df)
+
+#Generate URLs and download and process all relevant JSON data
+alleles.df <- processClinGen(vcf.df,ref,generateAll = generateTranscripts, progressBar = F)
+
+#Match returned variant data with the OMOP concept library
+concepts.df <- addConcepts(alleles.df, concepts)
+
+concepts.df <- concepts.df[!duplicated(concepts.df$hgvsg),]
+
+knitr::kable(concepts.df[,c(3,2,5,6,7,8)], format = "html", align = "c")
+
+```
+
+The output data frame will contain data from all VCF records which mapped to a known OMOP Genomic Concept ID.  
+
+

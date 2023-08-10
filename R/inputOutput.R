@@ -2,7 +2,7 @@
 #' @return A set of concept synonyms for the OMOP Genomic dataset, derived from ATHENA
 #' @export
 loadConcepts <- function(){
-  concepts <- utils::read.csv(here::here("data/OMOP_GENOMIC/CONCEPT_SYNONYM.csv"), sep = "\t")
+  concepts <- utils::read.csv(here::here("inst/extdata/OMOP_GENOMIC/CONCEPT_SYNONYM.csv"), sep = "\t")
   concepts <- concepts[!is.na(concepts$concept_synonym_name),]
   return(concepts)
 }
@@ -12,7 +12,22 @@ loadConcepts <- function(){
 #' @return A map of synonyms between chromosome IDs for a given reference genome
 #' @export
 loadReference <- function(ref=ref){
-  ref.df <- read.csv(paste(here::here("data/reference/"),"/",ref,".csv",sep=""))[,-1]
+  if(ref == "hg18"){
+    ref.data <- GenomeInfoDb::getChromInfoFromNCBI(assembly = "NCBI36")
+  } else if(ref == "hg19"){
+    ref.data <- GenomeInfoDb::getChromInfoFromNCBI(assembly = "GRCh37")
+  } else if(ref == "hg38"){
+    ref.data <- GenomeInfoDb::getChromInfoFromNCBI(assembly = "GRCh38")
+  }
+
+  ref.data <- ref.data[,c(1,4,9,6)] %>%
+    tidyr::pivot_longer(cols = c("SequenceName","GenBankAccn","UCSCStyleName"))
+
+  ref.df <- ref.data[,c(3,1)]
+  colnames(ref.df) <- c("Molecule_name","RefSeq_sequence")
+
+  ref.df <- ref.df[!(is.na(ref.df$Molecule_name)|is.na(ref.df$RefSeq_sequence)),]
+
   return(ref.df)
 }
 

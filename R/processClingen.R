@@ -6,10 +6,11 @@
 #'                                hg38
 #' @param generateAll A toggle indicating whether all transcript alleles, as well as
 #' all genomic alleles, should be returned
+#' @param progressBar A toggle indicating whether or not a progress bar will be displayed
 #' @return A dataframe containing data derived from the relevant ClinGen URL
 #' for each allele found corresponding to a vcf row
 #' @export
-processClinGen <- function(vcf.df, ref, generateAll = FALSE){
+processClinGen <- function(vcf.df, ref, generateAll = FALSE, progressBar = TRUE){
 
   #Create a handle
   thisHandle <- httr::handle("http://reg.test.genome.network/")
@@ -34,7 +35,9 @@ processClinGen <- function(vcf.df, ref, generateAll = FALSE){
       variant <- jsonlite::parse_json(urlTest)
     )
 
-    progress(x = i, max = length(vcf.df$URL))
+    if(progressBar == TRUE){
+      progress(x = i, max = length(vcf.df$URL))
+    }
 
     genes <- c()
 

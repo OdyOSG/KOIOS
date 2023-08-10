@@ -4,7 +4,7 @@
 \alias{processClinGen}
 \title{Process a vcf.df dataframe to return clingen data for all variants}
 \usage{
-processClinGen(vcf.df, ref, generateAll = FALSE)
+processClinGen(vcf.df, ref, generateAll = FALSE, progressBar = TRUE)
 }
 \arguments{
 \item{vcf.df}{Input vcf.df object}
@@ -16,6 +16,8 @@ Must be one of: hg18
 
 \item{generateAll}{A toggle indicating whether all transcript alleles, as well as
 all genomic alleles, should be returned}
+
+\item{progressBar}{A toggle indicating whether or not a progress bar will be displayed}
 }
 \value{
 A dataframe containing data derived from the relevant ClinGen URL
