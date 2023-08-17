@@ -51,5 +51,7 @@ findReference <- function(vcf){
   #Set reference genome
   ref <- c("hg18","hg19","hg38")[which.max(resultLength)]
 
+  message(paste("Reference set as: ", ref, sep = ""))
+
   return(ref)
 }

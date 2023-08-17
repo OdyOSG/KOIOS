@@ -10,7 +10,8 @@ Description: KOIOS handles conversions between raw .vcf or .vcf.gz files, via hg
 Imports:
   vcfR,
   GenomeInfoDb,
-  jsonlite,
+  RcppSimdJson,
+  prettyunits,
   httr,
   stringr,
   magrittr,

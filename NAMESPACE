@@ -12,3 +12,5 @@ export(processClinGen)
 export(processVCF)
 importFrom(magrittr,"%>%")
 importFrom("utils", "read.csv")
+importFrom("stats", "na.omit")
+

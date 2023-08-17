@@ -21,9 +21,13 @@ processClinGen <- function(vcf.df, ref, generateAll = FALSE, progressBar = TRUE)
   colnames(returnDat) <- c("Allele#","variantClinGenURL","hgvsg",
                            "varType","geneSymbol","chr","ref")
 
+  start <- proc.time()[3]
+
   k <- 1
 
   for(i in c(1:length(vcf.df$URL))) {
+
+    skip_to_next <- FALSE
 
     tempVCF <- vcf.df[i,]
 
@@ -31,63 +35,83 @@ processClinGen <- function(vcf.df, ref, generateAll = FALSE, progressBar = TRUE)
                          path = gsub(thisHandle$url,"",tempVCF$URL),
                          encoding = "UTF-8", as = "text")
 
-    suppressMessages(
-      variant <- jsonlite::parse_json(urlTest)
-    )
+    variant <- RcppSimdJson::fparse(urlTest$content)
 
     if(progressBar == TRUE){
       progress(x = i, max = length(vcf.df$URL))
+      eta(x = i, max = length(vcf.df$URL), start)
     }
 
     genes <- c()
 
-    for(l in c(1:length(variant$transcriptAlleles))){
+    if(!is.null(variant$transcriptAlleles)){
 
-      genes <- c(genes,variant$transcriptAlleles[[l]]$geneSymbol)
+      for(l in c(1:dim(variant$transcriptAlleles)[1])){
 
-    }
-
-    genes <- paste(unique(genes),collapse = ", ")
-
-    for(l in c(1:length(variant$transcriptAlleles))){
-
-      if(generateAll == TRUE){
-
-        returnDat[k,]$`Allele#` <- k
-        returnDat[k,]$variantClinGenURL <- tempVCF$URL
-        returnDat[k,]$hgvsg <- variant$transcriptAlleles[[l]]$MANE$nucleotide$RefSeq$hgvs
-        returnDat[k,]$geneSymbol <- paste(unique(genes),collapse=", ")
-        returnDat[k,]$varType <- tempVCF$TYPE
-        returnDat[k,]$chr <- tempVCF$CHROM
-        returnDat[k,]$ref <- ref
-
-        k <- k + 1
-
-        returnDat[k,]$`Allele#` <- k
-        returnDat[k,]$variantClinGenURL <- tempVCF$URL
-        returnDat[k,]$hgvsg <- variant$transcriptAlleles[[l]]$MANE$protein$RefSeq$hgvs
-        returnDat[k,]$geneSymbol <- paste(unique(genes),collapse=", ")
-        returnDat[k,]$varType <- tempVCF$TYPE
-        returnDat[k,]$chr <- tempVCF$CHROM
-        returnDat[k,]$ref <- ref
-
-        k <- k + 1
+        genes <- c(genes,
+                   variant$transcriptAlleles$geneSymbol[l])
 
       }
 
     }
 
-    for(j in c(1:length(variant$genomicAlleles))){
+    genes <- paste(na.omit(unique(genes)),collapse = ", ")
 
-      returnDat[k,]$`Allele#` <- k
-      returnDat[k,]$variantClinGenURL <- tempVCF$URL
-      returnDat[k,]$hgvsg <- variant$genomicAlleles[[j]]$hgvs[[1]]
-      returnDat[k,]$geneSymbol <- genes
-      returnDat[k,]$varType <- tempVCF$TYPE
-      returnDat[k,]$chr <- tempVCF$CHROM
-      returnDat[k,]$ref <- ref
+    if(!is.null(variant$transcriptAlleles)){
 
-      k <- k ++ 1
+      for(l in c(1:dim(variant$transcriptAlleles)[1])){
+
+        if(generateAll == TRUE){
+          if("MANE" %in% colnames(variant$transcriptAlleles)){
+
+            if(!is.na(variant$transcriptAlleles$MANE[[l]][[1]])){
+
+              returnDat[k,]$`Allele#` <- i
+              returnDat[k,]$variantClinGenURL <- tempVCF$URL
+              returnDat[k,]$hgvsg <- variant$transcriptAlleles$MANE[[l]]$nucleotide$RefSeq$hgvs
+              returnDat[k,]$geneSymbol <- paste(unique(genes),collapse=", ")
+              returnDat[k,]$varType <- tempVCF$TYPE
+              returnDat[k,]$chr <- tempVCF$CHROM
+              returnDat[k,]$ref <- ref
+
+              k <- k + 1
+
+              returnDat[k,]$`Allele#` <- i
+              returnDat[k,]$variantClinGenURL <- tempVCF$URL
+              returnDat[k,]$hgvsg <- variant$transcriptAlleles$MANE[[l]]$protein$RefSeq$hgvs
+              returnDat[k,]$geneSymbol <- paste(unique(genes),collapse=", ")
+              returnDat[k,]$varType <- tempVCF$TYPE
+              returnDat[k,]$chr <- tempVCF$CHROM
+              returnDat[k,]$ref <- ref
+
+              k <- k + 1
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+
+    if(!is.null(variant$genomicAlleles)){
+
+      for(j in c(1:dim(variant$genomicAlleles)[1])){
+
+        returnDat[k,]$`Allele#` <- i
+        returnDat[k,]$variantClinGenURL <- tempVCF$URL
+        returnDat[k,]$hgvsg <- variant$genomicAlleles$hgvs[[j]][[1]]
+        returnDat[k,]$geneSymbol <- genes
+        returnDat[k,]$varType <- tempVCF$TYPE
+        returnDat[k,]$chr <- tempVCF$CHROM
+        returnDat[k,]$ref <- ref
+
+        k <- k ++ 1
+
+      }
 
     }
 

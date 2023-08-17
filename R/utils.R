@@ -29,3 +29,21 @@ progress <- function (x, max = 100) {
   if (x == max)
     cat('\n')
 }
+
+#' ETA of completion'
+#' @param x Current progress
+#' @param max Final progress value
+#' @param start A Sys.time() call at the beginning of processing
+eta <- function(x, max, start) {
+  c = (max-x)+1
+  if(c!=max){
+    timenow = proc.time()[3]
+    timeper = (timenow-start)/x
+    timeleft = 1.05*c*timeper
+    cat(" -  ", prettyunits::vague_dt(as.difftime(timeleft,units = "secs"),
+                                    format = "short"),". remaining.", sep = "")
+  }
+  if (x == max)
+    cat('\n')
+}
+
