@@ -125,8 +125,123 @@ processClinGen <- function(vcf.df, ref, generateAll = FALSE, progressBar = TRUE)
 
 }
 
+conceptToConcept <- function(concepts, progressBar = TRUE, generateAll = TRUE){
 
-#' Adds
+  #Create a handle
+  thisHandle <- httr::handle("http://reg.test.genome.network/")
+
+  concepts$info <- ""
+  concepts[grepl("NM_|NC_|NP_|NG_|EST_|ENST[0-9]+",concepts$concept_synonym_name),]$info <- "Variant"
+
+  concepts_with_URL <- concepts[concepts$info=="Variant",]
+  concepts_with_URL$URL <- paste("http://reg.test.genome.network/allele?hgvs=",concepts_with_URL$concept_synonym_name,sep="")
+
+  returnDat <- as.data.frame(matrix(ncol = 6))
+  colnames(returnDat) <- c("Allele#","variantClinGenURL","hgvsg",
+                           "geneSymbol","concept_id","community_standard_title")
+
+  start <- proc.time()[3]
+
+  k <- 1
+
+  for(i in c(1:length(concepts_with_URL$URL))) {
+
+    skip_to_next <- FALSE
+
+    tempVCF <- concepts_with_URL[i,]
+
+    urlTest <- httr::GET(handle = thisHandle,
+                         path = gsub(thisHandle$url,"",tempVCF$URL),
+                         encoding = "UTF-8", as = "text")
+
+    variant <- RcppSimdJson::fparse(urlTest$content)
+
+    communityStandardTitle <- paste(unique(variant$communityStandardTitle),collapse = "; ")
+
+    if(progressBar == TRUE){
+      progress(x = i, max = length(concepts_with_URL$URL))
+      eta(x = i, max = length(concepts_with_URL$URL), start)
+    }
+
+    genes <- c()
+
+    if(!is.null(variant$transcriptAlleles)){
+
+      for(l in c(1:dim(variant$transcriptAlleles)[1])){
+
+        genes <- c(genes,
+                   variant$transcriptAlleles$geneSymbol[l])
+
+      }
+
+    }
+
+    genes <- paste(na.omit(unique(genes)),collapse = ", ")
+
+    if(!is.null(variant$transcriptAlleles)){
+
+      for(l in c(1:dim(variant$transcriptAlleles)[1])){
+
+        if(generateAll == TRUE){
+          if("MANE" %in% colnames(variant$transcriptAlleles)){
+
+            if(!is.na(variant$transcriptAlleles$MANE[[l]][[1]])){
+
+              returnDat[k,]$`Allele#` <- i
+              returnDat[k,]$variantClinGenURL <- tempVCF$URL
+              returnDat[k,]$hgvsg <- variant$transcriptAlleles$MANE[[l]]$nucleotide$RefSeq$hgvs
+              returnDat[k,]$geneSymbol <- paste(unique(genes),collapse=", ")
+              returnDat[k,]$concept_id <- tempVCF$concept_id
+              returnDat[k,]$community_standard_title <- communityStandardTitle
+
+              k <- k + 1
+
+              returnDat[k,]$`Allele#` <- i
+              returnDat[k,]$variantClinGenURL <- tempVCF$URL
+              returnDat[k,]$hgvsg <- variant$transcriptAlleles$MANE[[l]]$protein$RefSeq$hgvs
+              returnDat[k,]$geneSymbol <- paste(unique(genes),collapse=", ")
+              returnDat[k,]$concept_id <- tempVCF$concept_id
+              returnDat[k,]$community_standard_title <- communityStandardTitle
+
+              k <- k + 1
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+
+    if(!is.null(variant$genomicAlleles)){
+
+      for(j in c(1:dim(variant$genomicAlleles)[1])){
+
+        returnDat[k,]$`Allele#` <- i
+        returnDat[k,]$variantClinGenURL <- tempVCF$URL
+        returnDat[k,]$hgvsg <- variant$genomicAlleles$hgvs[[j]][[1]]
+        returnDat[k,]$geneSymbol <- genes
+        returnDat[k,]$chr <- tempVCF$CHROM
+        returnDat[k,]$concept_id <- tempVCF$concept_id
+        returnDat[k,]$community_standard_title <- communityStandardTitle
+
+        k <- k ++ 1
+
+      }
+
+    }
+
+  }
+
+  return(returnDat)
+
+}
+
+
+#' Adds concept information to an alleles.df dataframe
 #' @param alleles.df An alleles.df dataframe returned by
 #' @param concepts The ATHENA concept set, derived from loadConcepts (or User input)
 #' @param returnAll A paramatere indicating whether or not to return results
