@@ -4,3 +4,4 @@ Test VCF/
 ./koios_Test.*
 userScript.*
 ConceptToConcept.csv
+.Rdata
