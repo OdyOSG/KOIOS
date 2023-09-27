@@ -5,7 +5,7 @@ output: md_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-[![ODS](./img/ods_logo.jpg "Odysseus Data Services")](https://odysseusinc.com/)
+[![ODS](./img/ods_logo.jpg "Odysseus Data Services")](https://odysseusinc.com/){width=90 height=90}
 
 ## Overview
 

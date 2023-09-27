@@ -1,6 +1,7 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-[![ODS](./img/ods_logo.jpg "Odysseus Data Services")](https://odysseusinc.com/)
+<a href="https://odysseusinc.com/" width="90" height="90"><img
+src="./img/ods_logo.jpg" title="Odysseus Data Services" alt="ODS" /></a>
 
 ## Overview
 
