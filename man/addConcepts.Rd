@@ -2,7 +2,7 @@
 % Please edit documentation in R/processClingen.R
 \name{addConcepts}
 \alias{addConcepts}
-\title{Adds}
+\title{Adds concept information to an alleles.df dataframe}
 \usage{
 addConcepts(alleles.df, concepts, returnAll = FALSE)
 }
@@ -19,5 +19,5 @@ A dataframe containing only alleles found in the OMOP Genomic vocab
 and their associated data
 }
 \description{
-Adds
+Adds concept information to an alleles.df dataframe
 }

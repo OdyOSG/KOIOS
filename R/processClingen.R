@@ -131,10 +131,10 @@ conceptToConcept <- function(concepts, progressBar = TRUE, generateAll = TRUE){
   thisHandle <- httr::handle("http://reg.test.genome.network/")
 
   concepts$info <- ""
-  concepts[grepl("NM_|NC_|NP_|NG_|EST_|ENST[0-9]+",concepts$concept_synonym_name),]$info <- "Variant"
+  concepts[grepl("NM_|NC_|NP_|NG_|EST_|ENST[0-9]+",concepts$concept_code),]$info <- "Variant"
 
   concepts_with_URL <- concepts[concepts$info=="Variant",]
-  concepts_with_URL$URL <- paste("http://reg.test.genome.network/allele?hgvs=",concepts_with_URL$concept_synonym_name,sep="")
+  concepts_with_URL$URL <- paste("http://reg.test.genome.network/allele?hgvs=",concepts_with_URL$concept_code,sep="")
 
   returnDat <- as.data.frame(matrix(ncol = 6))
   colnames(returnDat) <- c("Allele#","variantClinGenURL","hgvsg",
@@ -253,9 +253,10 @@ addConcepts <- function(alleles.df, concepts, returnAll = FALSE) {
 
   fullDat <- merge(alleles.df,concepts,
                    by.x = "hgvsg",
-                   by.y = "concept_synonym_name",
-                   all = returnAll)[,c(2,8,1,3,4,5,6,7)] %>%
-    dplyr::arrange(.data$`Allele#`)
+                   by.y = "concept_code",
+                   all = F)[,c(2,8,1,3,4,5,6,7,9,11)]  %>%
+    dplyr::arrange(.data$`Allele#`) %>%
+    dplyr::distinct()
 
   return(fullDat)
 
