@@ -1,7 +1,8 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
-<a href="https://odysseusinc.com/" width="90" height="90"><img
-src="./img/ods_logo.jpg" title="Odysseus Data Services" alt="ODS" /></a>
+<p float="left">
+<img src="./img/koios.png" style="vertical-align: center;" width="97"/>
+<img src="./img/ods_logo.jpg" style="vertical-align: center;" width="100"/>
+</p>
 
 ## Overview
 
