@@ -1,7 +1,6 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 <p float="left">
-<img src="./img/koios.png" style="vertical-align: center;" width="97"/>
-<img src="./img/ods_logo.jpg" style="vertical-align: center;" width="100"/>
+<img src="./img/koios.png" style="vertical-align: center;" width="100"/><img src="./img/ods_logo.jpg" style="vertical-align: center;" width="100"/>
 </p>
 
 ## Overview
