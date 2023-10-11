@@ -2,9 +2,7 @@
 #' @return A set of concept synonyms for the OMOP Genomic dataset, derived from ATHENA
 #' @export
 loadConcepts <- function(){
-  concepts <- utils::read.csv(here::here("inst/extdata/OMOP_GENOMIC/CONCEPT_SYNONYM.csv"), sep = "\t")
-  concepts <- concepts[!is.na(concepts$concept_synonym_name),]
-  return(concepts)
+  return(KOIOS::concepts)
 }
 
 #' Generate a set of reference maps between chromosome IDs

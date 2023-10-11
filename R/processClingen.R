@@ -254,7 +254,7 @@ addConcepts <- function(alleles.df, concepts, returnAll = FALSE) {
   fullDat <- merge(alleles.df,concepts,
                    by.x = "hgvsg",
                    by.y = "concept_code",
-                   all = F)[,c(2,8,1,3,4,5,6,7,9,11)]  %>%
+                   all.x = returnAll)[,c(2,8,1,3,4,5,6,7,9,11)]  %>%
     dplyr::arrange(.data$`Allele#`) %>%
     dplyr::distinct()
 
