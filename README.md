@@ -26,6 +26,14 @@ KOIOS can presently be installed directly from GitHub:
 
 ## Usage
 
+### userScript.R
+
+The file userScript.R may be loaded as a default workflow wherein only
+the initial reference genome and VCF file or VCF files directory need be
+specified.
+
+### Manual
+
 Users must provide at least one valid VCF file in either .vcf or .vcf.gz
 format. This may be in the form of a single file, or a directory
 containing a set of .vcf or .vcf.gz files.

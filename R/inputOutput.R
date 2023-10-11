@@ -55,6 +55,8 @@ loadVCF <- function(userVCF){
 
     }
 
+    names(outList) <- fileList
+
     return(outList)
 
   }

@@ -5,7 +5,11 @@
 #' @export
 processVCF <- function(vcfR){
 
-  vcf.df <- as.data.frame(vcfR::getFIX(vcfR))
+  if(length(vcfR::getCHROM(vcfR))==1){
+    vcf.df <- as.data.frame(t(as.data.frame(vcfR::getFIX(vcfR))))
+  } else {
+    vcf.df <- as.data.frame(vcfR::getFIX(vcfR))
+  }
 
   colnames(vcf.df) <- c("CHROM","POS","ID","REF","ALT","QUAL","FILTER")
 
