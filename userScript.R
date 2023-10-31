@@ -94,9 +94,3 @@ if(typeof(vcf) == "list"){
 
 
 }
-
-
-
-
-
-
