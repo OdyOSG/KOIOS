@@ -9,13 +9,6 @@ KOIOS is a tool developed by [Odysseus Data Services
 Inc](https://odysseusinc.com/) that allows users to combine their
 variant data with the OMOP Genomic Vocabulary in order to generate a set
 of genomic standard concept IDs from raw patient-level genomic data.
-KOIOS allows you to extract all relevant variant information from a
-given VCF file by automatically finding and parsing the relevant data
-found on the \[ClinGen Allele\]
-Registry(<https://reg.clinicalgenome.org/redmine/projects/registry/genboree_registry/landing>),
-collating all available genomic alleles, as well as any downstream mRNA
-or protein variants and finding any corresponding standard concepts
-within the OMOP Genomic vocabulary.
 
 ## Installation
 
@@ -71,7 +64,7 @@ variants against known ClinGen variants.
     ref <- findReference(vcf)
     ref.df <- loadReference(ref)
 
-\###Multi-VCF Pipeline
+### Multi-VCF Pipeline
 
 Multiple VCF files within a single directory may be submitted
 simultaneously within a single command:
