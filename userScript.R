@@ -1,5 +1,4 @@
 library(KOIOS)
-setwd("C:/Users/ldyer/Documents/KOIOS2.0/KOIOS/")
 
 ##### Input #####
 
@@ -10,7 +9,7 @@ concepts <- loadConcepts()
 vcf <- loadVCF(userVCF = "SomeVCF.vcf ")
 
 #Set the reference genome to "auto"
-ref <- "hg19"
+ref <- "auto"
 
 ##### Run - Single VCF #####
 if(ref == "auto"){
