@@ -2,7 +2,6 @@
 
 export("%>%")
 export(addConcepts)
-export(findReference)
 export(generateFusions_cBioPortal)
 export(generateHGVSG)
 export(hgvsgConvert)
@@ -17,4 +16,3 @@ export(processClinGen)
 export(processVCF)
 export(processcBioPortal)
 importFrom(magrittr,"%>%")
-importFrom("stats", "na.omit")

@@ -24,12 +24,15 @@ loadConcepts_fusions <- function(){
 #' @return A map of synonyms between chromosome IDs for a given reference genome
 #' @export
 loadReference <- function(ref=ref){
+
+  refData <- KOIOS::refData
+
   if(ref == "hg18"){
-    ref.data <- GenomeInfoDb::getChromInfoFromNCBI(assembly = "NCBI36")
+    ref.data <- refData[refData$assembly == "NCBI36",]
   } else if(ref == "hg19"){
-    ref.data <- GenomeInfoDb::getChromInfoFromNCBI(assembly = "GRCh37")
+    ref.data <- refData[refData$assembly == "GRCh37",]
   } else if(ref == "hg38"){
-    ref.data <- GenomeInfoDb::getChromInfoFromNCBI(assembly = "GRCh38")
+    ref.data <- refData[refData$assembly == "GRCh38",]
   }
 
   ref.data <- ref.data[,c(1,4,9,6)] %>%

@@ -33,3 +33,22 @@
 #'   \item{ver}{Specific identity of origin}
 #' }
 "concepts_fusion"
+
+#' Fusion Concept Vocabulary
+#'
+#' A loadable concept vocabulary for OMOP Genomic gene fusions
+#' @format A data frame containing reference data for hg18, hg19 and hg38
+#' \describe{
+#'   \item{SequenceName}{}
+#'   \item{SequenceRole}{}
+#'   \item{AssignedMolecule}{}
+#'   \item{GenBankAccn}{}
+#'   \item{Relationship}{}
+#'   \item{RefSeqAccn}{}
+#'   \item{AssemblyUnit}{}
+#'   \item{SequenceLength}{}
+#'   \item{UCSCStyleName}{}
+#'   \item{circular}{}
+#'   \item{assembly}{}
+#' }
+"refData"
