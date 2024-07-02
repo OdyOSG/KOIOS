@@ -23,7 +23,7 @@ NULL
 progress <- function (x, max = 100) {
   percent <- x / max * 100
   cat(sprintf('\r[%-50s] %d / %d',
-              paste(rep('=', percent / 2), collapse = ''),
+              paste(rep('=', round(percent / 2)), collapse = ''),
               x,
               max))
   if (x == max)
