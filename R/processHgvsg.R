@@ -66,7 +66,7 @@ processcBioPortal <- function(mutations) {
   ref.data <- loadReference(ref)
 
   mut_vcf <- mutations %>%
-    dplyr::select(Chromosome, Start_Position, End_Position, Tumor_Seq_Allele1, Tumor_Seq_Allele2, Variant_Type)
+    dplyr::select(Chromosome, Start_Position, End_Position, Reference_Allele, Tumor_Seq_Allele2, Variant_Type)
 
   mut_vcf$Variant_Type <- ifelse(mut_vcf$Variant_Type=="ONP","DELINS",mut_vcf$Variant_Type)
   mut_vcf$Variant_Type <- ifelse(mut_vcf$Variant_Type=="DNP","DELINS",mut_vcf$Variant_Type)
