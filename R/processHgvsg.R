@@ -70,6 +70,7 @@ processcBioPortal <- function(mutations) {
 
   mut_vcf$Variant_Type <- ifelse(mut_vcf$Variant_Type=="ONP","DELINS",mut_vcf$Variant_Type)
   mut_vcf$Variant_Type <- ifelse(mut_vcf$Variant_Type=="DNP","DELINS",mut_vcf$Variant_Type)
+  mut_vcf$Variant_Type <- ifelse(mut_vcf$Variant_Type=="TNP","DELINS",mut_vcf$Variant_Type)
 
   mut_vcf$hgvsg <- apply(mut_vcf, 1, FUN = function(x)
     hgvsgConvert_cBioPortal(row = x, ref.df = ref.data))
