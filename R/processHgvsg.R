@@ -63,18 +63,18 @@ processcBioPortal <- function(mutations) {
                 ifelse(mutations$NCBI_Build[[1]] == "GRCh37","hg19",
                        ifelse(mutations$NCBI_Build[[1]] == "GRCh38","hg38")))
 
-  ref.data <- loadReference(ref)
+  ref.df <- loadReference(ref)
 
   mut_vcf <- mutations %>%
-    dplyr::select(Chromosome, Start_Position, End_Position, Reference_Allele, Tumor_Seq_Allele2, Variant_Type)
+    dplyr::select(dplyr::any_of(c("InputID", "Tumor_Sample_Barcode", "Chromosome", "Start_Position", "End_Position", "Reference_Allele", "Tumor_Seq_Allele2", "Variant_Type")))
 
   mut_vcf$Variant_Type <- ifelse(mut_vcf$Variant_Type=="ONP","DELINS",mut_vcf$Variant_Type)
   mut_vcf$Variant_Type <- ifelse(mut_vcf$Variant_Type=="DNP","DELINS",mut_vcf$Variant_Type)
   mut_vcf$Variant_Type <- ifelse(mut_vcf$Variant_Type=="TNP","DELINS",mut_vcf$Variant_Type)
 
   mut_vcf$hgvsg <- apply(mut_vcf, 1, FUN = function(x)
-    hgvsgConvert_cBioPortal(row = x, ref.df = ref.data))
-  colnames(mut_vcf) <- c("CHROM","POS_START","POS_END","REF","ALT","TYPE","hgvsg")
+    hgvsgConvert_cBioPortal(row = x, ref.df = ref.df))
+  colnames(mut_vcf) <- c("InputID","Tumor_Sample_Barcode","CHROM","POS_START","POS_END","REF","ALT","TYPE","hgvsg")
   mut_vcf$Input_ID <- c(1:length(mut_vcf$hgvsg))
 
   return(mut_vcf)
@@ -107,6 +107,7 @@ hgvsgConvert <- function(row,ref.df){
 
 }
 
+
 #' Generate a hgvsg string from cBioPortal format
 #' @param row A mut_vcf row
 #' @param ref.df A ref.df object containing chrom specifications
@@ -114,17 +115,17 @@ hgvsgConvert <- function(row,ref.df){
 #' @export
 hgvsgConvert_cBioPortal <- function(row,ref.df){
 
-  Chr <- ref.df[ref.df$Molecule_name == row[[1]],]$RefSeq_sequence
+  Chr <- ref.df[ref.df$Molecule_name == row[[3]],]$RefSeq_sequence
 
-  if(row[6] == "SNP"){
-    hgvsg <- paste(Chr,":g.",row[2],row[4],">",row[5],sep="")
-  } else if(row[6] == "DEL"){
-    modPOS <- as.numeric(row[2])+1
-    hgvsg <- paste(Chr,":g.",row[2],"_",row[3],"del",sep="")
-  } else if(row[6] == "INS"){
-    hgvsg <- paste(Chr,":g.",row[2],"_",row[3],"ins",row[5],sep="")
-  } else if(row[6] == "DELINS"){
-    hgvsg <- paste(Chr,":g.",row[2],"_",row[3],"delins",row[5],sep="")
+  if(row[8] == "SNP"){
+    hgvsg <- paste(Chr,":g.",row[4],row[6],">",row[7],sep="")
+  } else if(row[8] == "DEL"){
+    modPOS <- as.numeric(row[4])+1
+    hgvsg <- paste(Chr,":g.",row[4],"_",row[5],"del",sep="")
+  } else if(row[8] == "INS"){
+    hgvsg <- paste(Chr,":g.",row[4],"_",row[5],"ins",row[7],sep="")
+  } else if(row[8] == "DELINS"){
+    hgvsg <- paste(Chr,":g.",row[4],"_",row[5],"delins",row[7],sep="")
   }
 
   hgvsg <- gsub(" ","",hgvsg)
